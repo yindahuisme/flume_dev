@@ -30,9 +30,9 @@ public class kinesis_test {
             ByteBuffer data = null;
             String data_str ="myData";
             List<Future<UserRecordResult>> putFutures = new LinkedList<Future<UserRecordResult>>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000000000; i++) {
                 try {
-                    data = ByteBuffer.wrap(data_str.getBytes("UTF-8"));
+                    data = ByteBuffer.wrap((data_str+String.valueOf(i)).getBytes("UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -40,6 +40,11 @@ public class kinesis_test {
                 putFutures.add(
                         kinesis.addUserRecord("kinesis_test", data_str.substring(0, 2), data));
                 System.out.println("write "+ String.valueOf(i));
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             // Wait for puts to finish and check the results
